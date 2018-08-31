@@ -1,20 +1,3 @@
--- Copyright (C) 2012 Trustwave
--- http://www.trustwave.com
--- 
--- This program is free software; you can redistribute it and/or modify
--- it under the terms of the GNU General Public License as published by
--- the Free Software Foundation; version 2 dated June, 1991 or at your option
--- any later version.
--- 
--- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
--- GNU General Public License for more details.
--- 
--- A copy of the GNU General Public License is available in the source tree;
--- if not, write to the Free Software Foundation, Inc.,
--- 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
 description = [[
 Gets a screenshot from the host
 ]]
@@ -48,12 +31,13 @@ action = function(host, port)
 	end
 
 	-- Execute the shell command wkhtmltoimage-i386 <url> <filename>
-	local cmd = "wkhtmltoimage-i386 -n " .. prefix .. "://" .. host.ip .. ":" .. port.number .. " " .. filename .. " 2> /dev/null   >/dev/null"
+	local cmd = "chromium-browser --no-sandbox --headless" .. " --screenshot=" .. filename .. " " .. prefix .. "://" .. host.ip .. ":" .. port.number .. " 2> /dev/null   >/dev/null"
 	
+	print(cmd)
 	local ret = os.execute(cmd)
 
 	-- If the command was successful, print the saved message, otherwise print the fail message
-	local result = "failed (verify wkhtmltoimage-i386 is in your path)"
+	local result = "failed (verify chromium-browser is in your path)"
 
 	if ret then
 		result = "Saved to " .. filename
@@ -63,3 +47,4 @@ action = function(host, port)
 	return stdnse.format_output(true,  result)
 
 end
+
